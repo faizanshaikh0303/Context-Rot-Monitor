@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Context Rot Monitor</title>
+    <link rel="stylesheet" href="panel.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎯 Context Rot Monitor</h1>
+            <div class="connection-status">
+                <span id="connectionDot" class="status-dot"></span>
+                <span id="connectionText">Disconnected</span>
+            </div>
+        </div>
+
+        <!-- Configuration Section -->
+        <div class="section">
+            <h2>⚙️ Configuration</h2>
+            <div class="config-row">
+                <label for="apiUrl">Backend URL:</label>
+                <input type="text" id="apiUrl" value="http://localhost:8000" placeholder="http://localhost:8000">
+                <button id="connectBtn" class="btn btn-primary">Connect</button>
+            </div>
+        </div>
+
+        <!-- North Star Section -->
+        <div class="section">
+            <h2>🌟 North Star (Original Goal)</h2>
+            <div id="northStarDisplay" class="placeholder">Not set - waiting for first conversation turn...</div>
+            <button id="resetBtn" class="btn btn-secondary" style="display: none;">Reset Conversation</button>
+        </div>
+
+        <!-- Drift Meter Section -->
+        <div class="section">
+            <h2>📊 Drift Detection</h2>
+            <div class="drift-container">
+                <div class="drift-label">
+                    <span>Similarity Score:</span>
+                    <span id="similarityValue">--</span>
+                </div>
+                <div class="drift-bar-container">
+                    <div id="driftBar" class="drift-bar"></div>
+                </div>
+                <div class="drift-threshold">
+                    <span>🟢 On Track (>0.7)</span>
+                    <span>🔴 Drifting (<0.7)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Section -->
+        <div class="section">
+            <h2>📈 Conversation Status</h2>
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="status-label">Total Turns</div>
+                    <div id="totalTurns" class="status-value">0</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Drift Checks</div>
+                    <div id="driftChecks" class="status-value">0</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Last Good Turn</div>
+                    <div id="lastGoodTurn" class="status-value">--</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Current Status</div>
+                    <div id="currentStatus" class="status-value">--</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Supervisor Analysis Section -->
+        <div id="supervisorSection" class="section" style="display: none;">
+            <h2>🤖 LLM Supervisor Analysis</h2>
+            <div class="alert alert-warning">
+                <div class="alert-header">
+                    <span>⚠️ Drift Detected</span>
+                    <span id="supervisorConfidence" class="badge">--</span>
+                </div>
+                <div class="analysis-content">
+                    <div class="analysis-row">
+                        <strong>Pursuing Goal:</strong>
+                        <span id="pursuingGoal">--</span>
+                    </div>
+                    <div class="analysis-row">
+                        <strong>Distraction:</strong>
+                        <span id="distraction">--</span>
+                    </div>
+                    <div class="analysis-row">
+                        <strong>Realignment:</strong>
+                        <span id="realignment">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Intervention Section -->
+        <div id="interventionSection" class="section" style="display: none;">
+            <h2>🚨 Intervention Required</h2>
+            <div class="intervention-box">
+                <pre id="interventionPrompt"></pre>
+            </div>
+            <button id="copyInterventionBtn" class="btn btn-primary">📋 Copy Intervention Prompt</button>
+            <button id="injectInterventionBtn" class="btn btn-danger">💉 Inject into Conversation</button>
+        </div>
+
+        <!-- Recent Turns Section -->
+        <div class="section">
+            <h2>💬 Recent Conversation</h2>
+            <div id="recentTurns" class="turns-container">
+                <div class="placeholder">No conversation turns yet...</div>
+            </div>
+        </div>
+
+        <!-- Manual Actions -->
+        <div class="section">
+            <h2>🔧 Manual Actions</h2>
+            <button id="manualCheckBtn" class="btn btn-secondary">Check Drift Now</button>
+            <button id="refreshStateBtn" class="btn btn-secondary">Refresh State</button>
+        </div>
+
+        <!-- Logs Section -->
+        <div class="section">
+            <h2>📝 Activity Log</h2>
+            <div id="activityLog" class="log-container">
+                <div class="log-entry">Monitor initialized. Connect to backend to start tracking.</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="panel.js"></script>
+</body>
+</html>

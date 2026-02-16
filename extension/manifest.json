@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Context Rot Monitor",
+  "version": "1.0.0",
+  "description": "Monitor and prevent context drift in multi-turn AI conversations",
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "http://localhost:8000/*"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "devtools_page": "devtools/devtools.html",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
