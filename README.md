@@ -35,6 +35,63 @@ An agentic system that detects and prevents "context rot" in multi-turn RAG conv
 - Chrome/Edge browser
 - Groq API key (free at [console.groq.com](https://console.groq.com/keys))
 
+This will simulate a conversation where you can act as a customer and deliberately drift from original issue and watch the agent bring it up again.
+
+## 📊 How It Works
+
+### Phase 1: Drift Detection
+
+1. **North Star Extraction**: The first user prompt is saved as the conversation's goal
+2. **Turn Snapshots**: Every N turns (default: 3), a state summary is generated
+3. **Vector Comparison**: Cosine similarity between North Star and current state
+4. **Drift Signal**: If similarity < 0.5, conversation is "rotting"
+
+### Phase 2: LLM Supervisor
+
+When drift is detected, Groq's Llama-3 analyzes:
+- Is the agent still pursuing the original goal?
+- What distraction caused the drift?
+- One-sentence instruction to realign
+
+### Phase 3: Intervention
+
+The system generates a re-alignment prompt that can be:
+- Copied to clipboard
+- Injected directly into the conversation
+
+## 🎯 Example Drift Scenario
+
+```
+Turn 1 (North Star): "I need help processing a refund for order #12345"
+Similarity: 1.000 🟢
+
+Turn 4: Discussion about login issues
+Similarity: 0.12 🟢
+
+Turn 7: Explaining email preference settings  
+Similarity: 0.15 🔴 DRIFT DETECTED
+
+Supervisor Analysis:
+- Pursuing Goal: ❌ No
+- Distraction: "Agent got sidetracked into account settings"
+- Realignment: "Acknowledge the email question briefly, then return to 
+  completing the refund for order #12345"
+```
+
+## 📈 Use Cases
+
+### Customer Support
+Detect when support agents drift from solving the original issue into tangential troubleshooting.
+
+### Coding Assistants
+Monitor when programming help strays from the main implementation goal into debugging rabbit holes.
+
+### RAG Applications
+Track when document retrieval systems start pulling irrelevant context.
+
+### Long Conversations
+Prevent goal amnesia in 20+ turn conversations.
+
 ## 🚀 Quick Start (15 minutes)
 
 ### 1. Get Your Groq API Key
@@ -85,43 +142,9 @@ The API will start at `http://localhost:8000`
 python demo.py
 ```
 
-This will simulate a conversation where you can act as a customer and deliberately drift from original issue and watch the agent bring it up again.
 
-## 📊 How It Works
 
-### Phase 1: Drift Detection
 
-1. **North Star Extraction**: The first user prompt is saved as the conversation's goal
-2. **Turn Snapshots**: Every N turns (default: 3), a state summary is generated
-3. **Vector Comparison**: Cosine similarity between North Star and current state
-4. **Drift Signal**: If similarity < 0.5, conversation is "rotting"
-
-### Phase 2: LLM Supervisor
-
-When drift is detected, Groq's Llama-3 analyzes:
-- Is the agent still pursuing the original goal?
-- What distraction caused the drift?
-- One-sentence instruction to realign
-
-### Phase 3: Intervention
-
-The system generates a re-alignment prompt that can be:
-- Copied to clipboard
-- Injected directly into the conversation
-
-## 📈 Use Cases
-
-### Customer Support
-Detect when support agents drift from solving the original issue into tangential troubleshooting.
-
-### Coding Assistants
-Monitor when programming help strays from the main implementation goal into debugging rabbit holes.
-
-### RAG Applications
-Track when document retrieval systems start pulling irrelevant context.
-
-### Long Conversations
-Prevent goal amnesia in 20+ turn conversations.
 
 ## ⚙️ Configuration
 
@@ -140,24 +163,7 @@ engine = DriftEngine(
 )
 ```
 
-## 🎯 Example Drift Scenario
 
-```
-Turn 1 (North Star): "I need help processing a refund for order #12345"
-Similarity: 1.000 🟢
-
-Turn 4: Discussion about login issues
-Similarity: 0.12 🟢
-
-Turn 7: Explaining email preference settings  
-Similarity: 0.15 🔴 DRIFT DETECTED
-
-Supervisor Analysis:
-- Pursuing Goal: ❌ No
-- Distraction: "Agent got sidetracked into account settings"
-- Realignment: "Acknowledge the email question briefly, then return to 
-  completing the refund for order #12345"
-```
 
 ## 📚 Tech Stack
 
